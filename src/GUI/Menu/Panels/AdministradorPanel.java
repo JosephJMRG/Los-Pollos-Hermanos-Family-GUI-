@@ -3,8 +3,12 @@ package Menu.Panels;
 import Menu.RestauranteGUI;
 import Utilities.PanelConBorde;
 import Utilities.PintarBoton;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 
 public class AdministradorPanel extends JPanel {
 
@@ -22,6 +26,8 @@ public class AdministradorPanel extends JPanel {
     private JButton botonReportes;
     private JButton botonAjustes;
 
+    private JFrame ventanaAdministrador; // Referencia a la ventana del administrador
+
     /**
      * Constructor de la clase AdministradorPanel.
      *
@@ -29,8 +35,11 @@ public class AdministradorPanel extends JPanel {
      * crear y añadir los subpaneles necesarios (roles, administración actual, etc.)
      *
      * @param gui Objeto de tipo RestauranteGUI que maneja la interfaz general de la aplicación.
+     * @param ventanaAdministrador La ventana del administrador que se va a cerrar.
      */
-    public AdministradorPanel(RestauranteGUI gui) {
+    public AdministradorPanel(RestauranteGUI gui, JFrame ventanaAdministrador) {
+        this.ventanaAdministrador = ventanaAdministrador; // Guardamos la referencia a la ventana
+
         configurarPanelPrincipal();
         rolesPanel(gui);
         administradorActualPanel();
@@ -67,7 +76,15 @@ public class AdministradorPanel extends JPanel {
         // Crear el botón "Volver" y asignarle acción
         botonVolver = new JButton("Volver");
         PintarBoton.pintarBoton(botonVolver);
-        botonVolver.addActionListener(e -> gui.mostrarPanel("Inicio"));
+        botonVolver.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Cerrar la ventana del Administrador (pero no terminar el programa)
+                ventanaAdministrador.dispose();
+                // Regresar al panel de Inicio en RestauranteGUI
+                gui.mostrarPanel("Inicio");
+            }
+        });
 
         // Añadir el botón al rolesPanel
         rolesPanel.add(botonVolver, "wrap, align center");

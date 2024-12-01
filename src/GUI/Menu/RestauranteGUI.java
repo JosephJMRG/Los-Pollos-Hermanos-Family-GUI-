@@ -14,14 +14,6 @@ public class RestauranteGUI extends JFrame {
     private CajeroPanel panelCajero;
     private AdministradorPanel panelAdministrador;
 
-    // Manejo de cierre para CardLayout(Administrador)
-    private JFrame ventanaAdministrador;
-
-    // Barra de Menú (Opcional)
-    private JMenuBar menuBar;
-    private JMenu menuArchivo;
-    private JMenuItem itemSalir;
-
     // Constructor principal
     public RestauranteGUI() {
         // Crear paneles primero
@@ -29,9 +21,6 @@ public class RestauranteGUI extends JFrame {
 
         // Inicializar la ventana
         inicializarVentana();
-
-        // Crear la barra de menú
-        crearBarraDeMenu();
 
         // Hacer visible la ventana al final del constructor
         setVisible(true);
@@ -75,32 +64,13 @@ public class RestauranteGUI extends JFrame {
         panelInicio = new InicioPanel(this);
         panelMesero = new MeseroPanel(this);
         panelCajero = new CajeroPanel(this);
-        panelAdministrador = new AdministradorPanel(this);
+        panelAdministrador = new AdministradorPanel(this, this);
 
         // Añadir paneles al panel principal
         panelPrincipal.add(panelInicio, "Inicio");
         panelPrincipal.add(panelMesero, "Mesero");
         panelPrincipal.add(panelCajero, "Cajero");
         panelPrincipal.add(panelAdministrador, "Administrador");
-    }
-
-    /**
-     * Crea la barra de menú principal con opciones.
-     */
-    private void crearBarraDeMenu() {
-        menuBar = new JMenuBar();
-
-        // Menú "Archivo"
-        menuArchivo = new JMenu("Archivo");
-        itemSalir = new JMenuItem("Salir");
-        itemSalir.addActionListener(e -> System.exit(0)); // Cerrar el programa
-        menuArchivo.add(itemSalir);
-
-        // Agregar el menú al barra de menú
-        menuBar.add(menuArchivo);
-
-        // Establecer la barra de menú en la ventana
-        setJMenuBar(menuBar);
     }
 
     /**
@@ -138,23 +108,12 @@ public class RestauranteGUI extends JFrame {
      */
     public void mostrarPanel(String nombrePanel) {
         if (nombrePanel.equals("Administrador")) {
-            // Crear una nueva ventana para el Administrador
-            ventanaAdministrador = new JFrame("Administrador");
-            ventanaAdministrador.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Este cierra solo la ventana, no termina el programa.
-            ventanaAdministrador.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            ventanaAdministrador.setLocationRelativeTo(null); // Centrar la ventana
-
-            // Crear el panel Administrador
-            AdministradorPanel administradorPanel = new AdministradorPanel(this);
-
-            // Agregar el panel de Administrador a la ventana
-            ventanaAdministrador.add(administradorPanel);
-
-            // Hacer visible la ventana
-            ventanaAdministrador.setVisible(true);
+            // Si ya tienes el panel de Administrador en el cardLayout, simplemente lo mostramos.
+            cardLayout.show(panelPrincipal, nombrePanel);
         } else {
-            // Si no es el panel de Administrador, muestra el panel normal
+            // Si no es el panel de Administrador, muestra el panel correspondiente en el CardLayout
             cardLayout.show(panelPrincipal, nombrePanel);
         }
     }
+    
 }
