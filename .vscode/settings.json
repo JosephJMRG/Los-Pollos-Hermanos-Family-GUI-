@@ -1,0 +1,14 @@
+{
+    "java.project.sourcePaths": [
+        "src",
+        "src\\GUI"
+    ],
+    "java.project.referencedLibraries": [
+        "libs\\MigLayout\\miglayout-core-5.3.jar",
+        "libs\\MigLayout\\miglayout-core-5.3-javadoc.jar",
+        "libs\\MigLayout\\miglayout-core-5.3-sources.jar",
+        "libs\\MigLayout\\miglayout-swing-5.3.jar",
+        "libs\\MigLayout\\miglayout-swing-5.3-javadoc.jar",
+        "libs\\MigLayout\\miglayout-swing-5.3-sources.jar"
+    ]
+}

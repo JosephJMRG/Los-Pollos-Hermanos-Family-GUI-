@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Ant-Default Project" default="create-jar" basedir=".">
+
+    <!-- Propiedades -->
+    <property name="project.name" value="GUI"/>
+    <property name="class.name" value="Main"/> <!-- Nombre de la clase principal -->
+    <property name="main.class" value="${class.name}"/>
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build/classes"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="lib.dir" value="libs"/>
+    <property name="jar.file" value="${dist.dir}/${project.name}.jar"/>
+    <property name="dist.libs.dir" value="${dist.dir}/libs"/>
+    <property name="manifest.classpath" value="libs/"/>
+
+    <!-- Tarea por defecto: Crear el JAR ejecutable -->
+    <target name="create-jar" depends="copy-libs, compile">
+        <!-- Crear el JAR ejecutable con el manifiesto adecuado -->
+        <jar destfile="${jar.file}" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+                <attribute name="Class-Path" value="${manifest.classpath}"/>
+            </manifest>
+        </jar>
+        <echo message="JAR ejecutable creado en '${jar.file}'."/>
+    </target>
+
+    <!-- Tarea para compilar el código fuente y copiar recursos -->
+    <target name="compile" depends="init">
+        <!-- Compilar el código fuente -->
+        <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false">
+            <classpath>
+                <!-- Incluir las librerías externas en el classpath -->
+                <fileset dir="${lib.dir}" includes="**/*.jar"/>
+            </classpath>
+        </javac>
+        <echo message="Compilación completada."/>
+        
+        <!-- Copiar archivos no .java al directorio de compilación -->
+        <copy todir="${build.dir}">
+            <fileset dir="${src.dir}" excludes="**/*.java"/>
+        </copy>
+        <echo message="Recursos y archivos no .java copiados al directorio de compilación."/>
+    </target>
+
+    <!-- Tarea para copiar las librerías al directorio de distribución -->
+    <target name="copy-libs" depends="init">
+        <mkdir dir="${dist.libs.dir}"/>
+        <copy todir="${dist.libs.dir}">
+            <fileset dir="${lib.dir}" includes="**/*.jar"/>
+        </copy>
+        <echo message="Librerías copiadas a '${dist.libs.dir}'."/>
+    </target>
+
+    <!-- Tarea para inicializar directorios y verificar existencia -->
+    <target name="init">
+        <!-- Crear directorios necesarios si no existen -->
+        <mkdir dir="${src.dir}"/>
+        <mkdir dir="${lib.dir}"/>
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+        <mkdir dir="${dist.libs.dir}"/>
+
+        <!-- Verificar si la clase principal existe -->
+        <available file="${src.dir}/${class.name}.java" property="main.java.exists"/>
+    </target>
+
+    <!-- Tarea para crear la clase principal si no existe -->
+    <target name="create-main-class" depends="init" unless="main.java.exists">
+        <!-- Crear la clase principal sin paquete -->
+        <echo file="${src.dir}/${class.name}.java" append="false" encoding="UTF-8"><![CDATA[
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("¡Hola, mundo!");
+    }
+}
+        ]]></echo>
+        <echo message="Clase principal '${main.class}.java' creada."/>
+    </target>
+
+    <!-- Tarea para crear el proyecto -->
+    <target name="create-project" depends="init, create-main-class">
+        <echo message="Proyecto creado exitosamente."/>
+    </target>
+
+    <!-- Tarea para limpiar los directorios de compilación y distribución -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <echo message="Directorios de compilación y distribución limpiados."/>
+    </target>
+
+</project>
